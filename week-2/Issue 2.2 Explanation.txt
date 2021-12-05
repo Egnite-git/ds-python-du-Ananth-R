@@ -1,0 +1,4 @@
+I would be using the CSV format to persist the extracted data because there is a designated library called "csv" to read the file and the same can be used to add rows and columns.
+One more reason is that I am comfortable using the csv file rather than the MySQL database.
+And csv is easier to work with compared to MySQL as we would not have to link the database to our code.
+Also,as we are extracting public data, high level security is not required.
