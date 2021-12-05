@@ -1,0 +1,36 @@
+import requests
+from bs4 import BeautifulSoup as bs
+import lxml
+import csv
+import pandas as pd
+
+file = open("e_week2.csv","w",encoding="utf-8")
+writer = csv.writer(file)
+writer.writerow(["Title","Date","Description","Link"])
+feed = open("urls_feed.txt","r")
+urls = feed.read()
+urls = urls.split("\n")
+
+for url in urls:
+    try:
+            r = requests.get(url)
+            status_code = r.status_code
+    except Exception as e:
+            print('Error fetching the URL: ', url)
+            print(e)
+    try:    
+            soup = bs(r.text, 'lxml')
+    except Exception as e:
+            print('Could not parse the xml: ', url)
+            print(e)
+    items = soup.findAll('item')
+    for item in items:
+        try:
+            items_dicts = {'Title':item.find('title').text,'Date':item.find('pubdate').text,'Description':item.find('description').text,'Link':item.link.next_sibling.replace('\n','').replace('\t','')}
+        except:
+            items_dict = {'Title':item.find('title').text}
+        f = csv.DictWriter(file, items_dicts.keys())
+        f.writerow(items_dicts)
+
+data = pd.read_csv('e_week2.csv')
+data
